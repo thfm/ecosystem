@@ -111,7 +111,7 @@ impl<O: Organism + std::marker::Send + std::marker::Sync> Ecosystem<O> {
                 .organisms
                 .choose(&mut rng)
                 .unwrap_or_else(|| panic!("there are no organisms in the ecosystem"));
-            if rng.gen_range(0.0, self.fittest().fitness()) < organism.fitness() {
+            if organism.fitness() > rng.gen_range(0.0, self.fittest().fitness()) {
                 break &organism;
             }
         }
