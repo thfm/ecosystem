@@ -30,12 +30,10 @@ const MUTATION_RATE: f64 = 0.1;
 const MAX_INITIAL_VALUE: f64 = 10.0;
 
 fn main() {
+    let mut rng = rand::thread_rng();
     let approximators: Vec<PiApproximator> = (0..POPULATION_COUNT)
-        .map(|_| {
-            let mut rng = rand::thread_rng();
-            PiApproximator {
-                value: rng.gen_range(-MAX_INITIAL_VALUE, MAX_INITIAL_VALUE),
-            }
+        .map(|_| PiApproximator {
+            value: rng.gen_range(-MAX_INITIAL_VALUE, MAX_INITIAL_VALUE),
         })
         .collect();
     let mut ecosystem = Ecosystem::new(approximators);
