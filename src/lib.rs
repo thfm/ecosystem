@@ -4,15 +4,19 @@ use rand::{seq::SliceRandom, Rng};
 use rayon::prelude::*;
 
 /// An interface for breeding, mutation, and fitness evaluation functionality.
+///
+/// The example code in this trait's method documentation is drawn from the
+/// 'π approximator' example of this crate's repository (https://github.com/thfm/ecosystem/).
 pub trait Organism {
     /// Evaluates the organism's fitness.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// impl Organism for Bird {
+    /// impl Organism for PiApproximator {
     ///     fn fitness(&self) -> f64 {
-    ///         self.x.powi(2)
+    ///         let diff = (std::f64::consts::PI - self.value).abs();
+    ///         1.0 / diff
     ///     }
     /// }
     /// ```
@@ -23,11 +27,10 @@ pub trait Organism {
     /// # Examples
     ///
     /// ```rust
-    /// impl Organism for Bird {
+    /// impl Organism for PiApproximator {
     ///     fn breed(&self, other: &Self) -> Self {
     ///         Self {
-    ///             x: 0.0,
-    ///             flap_power: (self.flap_power + other.flap_power) / 2.0,
+    ///             value: (self.value + other.value) / 2.0,
     ///         }
     ///     }
     /// }
@@ -41,10 +44,10 @@ pub trait Organism {
     /// ```rust
     /// use rand::Rng;
     ///
-    /// impl Organism for Bird {
+    /// impl Organism for PiApproximator {
     ///     fn mutate(&mut self, rate: f64) {
-    ///         let change = rand::thread_rng().gen_range(-1.0, 1.0);
-    ///         self.flap_power += change * rate;
+    ///         let change = rand::thread_rng().gen_range(-rate, rate);
+    ///         self.value += change;
     ///     }
     /// }
     /// ```
@@ -53,8 +56,10 @@ pub trait Organism {
 
 /// A collection of organisms.
 pub struct Ecosystem<O: Organism> {
-    organisms: Vec<O>,
-    generation: u32,
+    /// A vector containing the organisms.
+    pub organisms: Vec<O>,
+    /// The current generation number.
+    pub generation: u32,
 }
 
 impl<O: Organism + std::marker::Send + std::marker::Sync> Ecosystem<O> {
