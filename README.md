@@ -1,6 +1,6 @@
 # Ecosystem
 
-A small genetic algorithms library, written in Rust.
+A small genetic algorithms library.
 
 To use this library in your project, just add the following line to its `Cargo.toml` dependencies:
 
